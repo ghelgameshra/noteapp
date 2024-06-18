@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Note extends Model
 {
     use HasFactory;
+    protected $with = ['category'];
 
     public function category(): BelongsTo
     {

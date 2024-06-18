@@ -1,5 +1,12 @@
 @extends('pages.main')
 
+@section('css')
+<link rel="stylesheet" href="{{ url('Template') }}/assets/vendor/libs/typeahead-js/typeahead.css" />
+<link rel="stylesheet" href="{{ url('Template') }}/assets/vendor/libs/quill/typography.css" />
+<link rel="stylesheet" href="{{ url('Template') }}/assets/vendor/libs/quill/katex.css" />
+<link rel="stylesheet" href="{{ url('Template') }}/assets/vendor/libs/quill/editor.css" />
+@endsection
+
 @section('title-page')
 Dictionary
 @endsection
@@ -9,7 +16,7 @@ Dictionary
 @endsection
 
 @section('main-page')
-<!-- Ajax Sourced Server-side -->
+
 <div class="card">
   <h5 class="card-header">EDP Dictionary</h5>
   <div class="card-datatable">
@@ -25,9 +32,16 @@ Dictionary
       @include('note.modal-add')
   </div>
 </div>
-<!--/ Ajax Sourced Server-side -->
+
+<div class="position-fixed top-50 end-0 translate-middle">
+  <button type="button" class="btn btn-primary btn-icon rounded-pill btn-outline" onclick="addNewNote()">
+    <i class="tf-icons ti ti-plus"></i>
+  </button>
+</div>
+
 @include('note.modal')
 @push('js')
+<script src="{{ url('support/editor.js') }}"></script>
 <script>
 $(function(){
   var dt_ajax_table = $('.datatables-ajax'),
@@ -42,17 +56,14 @@ $(function(){
       processing: true,
       ajax: {
         "url" : `{{ url('api/notes') }}`,
-        "type": 'GET',
-        "data": function(response){
-          return response.data
-        }
+        "type": 'GET'
       },
       dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>><"table-responsive"t><"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
       columns: [
         {   data: (note) => {
           return `
           <button type="button" class="btn btn-outline-primary" onclick="showNote(${note.id})">
-            <i class="menu-icon tf-icons ti ti-eye"></i>
+            <i class="tf-icons ti ti-eye"></i>
           </button>
           `;
         }},
@@ -62,7 +73,17 @@ $(function(){
     });
   }
 
+  const editorBody = [
+    {"title": 'Summary',"placeholder": 'Problem summary here.'},
+    {"title": 'Detail Problem',"placeholder": 'Problem details here.'},
+    {"title": 'Error Messages',"placeholder": 'Error Messages.'},
+    {"title": 'Solution',"placeholder": 'Your solution/ idea here.'},
+  ];
+
+  insertEditor(editorBody);
+
 });
+// end funtion DOM
 
 function showNote(data){
   $('#noteDetail').modal('show');
@@ -81,16 +102,12 @@ function showNote(data){
   })
 }
 
-function showText(){
-  if($('#addNoteText').hasClass('d-none')){
-    $('#addNoteText').removeClass('d-none');
-  }
-
-  if(!$('#addNoteText').hasClass('d-none')){
-    $('#addNoteText').addClass('d-none');
-  }
+function addNewNote(){
+  $('#addNoteDetail').modal('show');
 }
 </script>
+<script src="{{ url('Template') }}/assets/vendor/libs/quill/katex.js"></script>
+<script src="{{ url('Template') }}/assets/vendor/libs/quill/quill.js"></script>
 @endpush
 
 @endsection
