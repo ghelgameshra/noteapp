@@ -15,6 +15,6 @@ class NoteSeeder extends Seeder
     public function run(): void
     {
         $notes = new NoteFactory();
-        $notes->count(10000)->create();
+        $notes->count(6)->create();
     }
 }

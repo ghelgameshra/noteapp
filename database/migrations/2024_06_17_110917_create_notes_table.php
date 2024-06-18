@@ -14,11 +14,10 @@ return new class extends Migration
         Schema::create('notes', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('category_id');
-            $table->string('store')->nullable();
             $table->string('summary');
-            $table->text('details');
-            $table->text('solution');
-            $table->text('error_messages')->nullable();
+            $table->longText('details');
+            $table->longText('solution');
+            $table->longText('error_messages')->nullable();
             $table->string('image_path')->nullable();
             $table->timestamps();
 

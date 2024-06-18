@@ -1,10 +1,8 @@
 @extends('pages.main')
 
 @section('css')
-<link rel="stylesheet" href="{{ url('Template') }}/assets/vendor/libs/typeahead-js/typeahead.css" />
-<link rel="stylesheet" href="{{ url('Template') }}/assets/vendor/libs/quill/typography.css" />
-<link rel="stylesheet" href="{{ url('Template') }}/assets/vendor/libs/quill/katex.css" />
-<link rel="stylesheet" href="{{ url('Template') }}/assets/vendor/libs/quill/editor.css" />
+<link rel="stylesheet" href="{{ url('Asset/lib/css/quill.snow.css') }}">
+<script src="{{ url('Asset/lib/js/quill.js') }}"></script>
 @endsection
 
 @section('title-page')
@@ -41,7 +39,6 @@ Dictionary
 
 @include('note.modal')
 @push('js')
-<script src="{{ url('support/editor.js') }}"></script>
 <script>
 $(function(){
   var dt_ajax_table = $('.datatables-ajax'),
@@ -73,41 +70,36 @@ $(function(){
     });
   }
 
-  const editorBody = [
-    {"title": 'Summary',"placeholder": 'Problem summary here.'},
-    {"title": 'Detail Problem',"placeholder": 'Problem details here.'},
-    {"title": 'Error Messages',"placeholder": 'Error Messages.'},
-    {"title": 'Solution',"placeholder": 'Your solution/ idea here.'},
-  ];
-
-  insertEditor(editorBody);
-
 });
 // end funtion DOM
 
 function showNote(data){
+  $('#NoteDetailBody p').remove();
+  $('#NoteDetailError p').remove();
+  $('#NoteDetailSolution p').remove();
+
   $('#noteDetail').modal('show');
+
   $.get(`{{ url('api/notes/${data}') }}`)
   .done((response) => {
+
     $('#noteDetailTitle').text(response.data['category_name']);
-    $('#NoteDetailSummary').text(response.data['summary']);
-    $('#NoteDetailBody').text(response.data['details']);
-    $('#NoteDetailError').text(response.data['error']);
-    $('#NoteDetailSolution').text(response.data['solution']);
-    $('#NoteDetailSolution').text(response.data['solution']);
+    $('#NoteDetailSummary').append(response.data['summary']);
+
+    $('#NoteDetailBody').append(response.data['details']);
+
+    $('#NoteDetailError').append(response.data['error']);
+    $('#NoteDetailSolution').append(response.data['solution']);
+
     $('#NoteDetailImage').attr('src', `{{ url('Images') }}/${response.data['image']}`);
     $('#NoteDetailImage').attr('alt', `{{ url('Images') }}/${response.data['image']}`);
+
   }).fail((e) => {
     console.log(e);
   })
 }
-
-function addNewNote(){
-  $('#addNoteDetail').modal('show');
-}
 </script>
-<script src="{{ url('Template') }}/assets/vendor/libs/quill/katex.js"></script>
-<script src="{{ url('Template') }}/assets/vendor/libs/quill/quill.js"></script>
+<script src="{{ url('Asset/lib/js/editor.js') }}"></script>
 @endpush
 
 @endsection

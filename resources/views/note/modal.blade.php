@@ -26,9 +26,8 @@
 
           <div class="col-12 mb-3">
             <label for="nameWithTitle" class="form-label">Error</label>
-            <article class="form-control" id="NoteDetailError"></article>
+            <article class="form-control" id="NoteDetailError" width="100%"></article>
           </div>
-
 
           <div class="col-12 mb-3">
             <label for="nameWithTitle" class="form-label">Solution</label>
