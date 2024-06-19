@@ -44,5 +44,4 @@ function addNewNote() {
     /*
       $('#snow-editor-0 .ql-editor')[0].innerHTML -> GET ITEM HTML FROM EDITOR
     */
-
 }

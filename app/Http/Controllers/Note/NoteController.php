@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Note;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\NoteRequest;
 use App\Http\Resources\NoteResource;
 use App\Models\Note;
-use Illuminate\Database\Eloquent\Casts\Json;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class NoteController extends Controller
@@ -24,5 +23,14 @@ class NoteController extends Controller
     {
         $note = Note::where('id', $id)->first();
         return new NoteResource($note);
+    }
+
+    public function create(NoteRequest $request)
+    {
+        $data = $request->validated();
+
+        $note = new Note($data);
+        $note->category_id = $data['category'];
+        $note->save();
     }
 }

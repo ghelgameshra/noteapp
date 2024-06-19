@@ -74,6 +74,7 @@
         </div>
         <!-- Content wrapper -->
       </div>
+    {{-- </div> --}}
       <!-- / Layout page -->
   </div>
 

@@ -1,6 +1,7 @@
 @extends('pages.main')
 
 @section('css')
+<link rel="stylesheet" href="{{ url('Template') }}/assets/vendor/libs/select2/select2.css" />
 <link rel="stylesheet" href="{{ url('Asset/lib/css/quill.snow.css') }}">
 <script src="{{ url('Asset/lib/js/quill.js') }}"></script>
 @endsection
@@ -27,7 +28,6 @@ Dictionary
               </tr>
           </thead>
       </table>
-      @include('note.modal-add')
   </div>
 </div>
 
@@ -36,9 +36,14 @@ Dictionary
     <i class="tf-icons ti ti-plus"></i>
   </button>
 </div>
-
+@include('note.modal-add')
 @include('note.modal')
+@endsection
+
 @push('js')
+<script src="{{ url('Asset/lib/js/editor.js') }}"></script>
+<script src="{{ url('Template') }}/assets/js/forms-selects.js"></script>
+<script src="{{ url('Template') }}/assets/vendor/libs/select2/select2.js"></script>
 <script>
 $(function(){
   var dt_ajax_table = $('.datatables-ajax'),
@@ -70,8 +75,34 @@ $(function(){
     });
   }
 
+
+  $('#addNoteDetail').on('shown.bs.modal', function(){
+    getCatg();
+  })
+
 });
 // end funtion DOM
+
+function getCatg(){
+  $('#selectCtgr').select2({
+    dropdownParent: '#addNoteDetail',
+      ajax: {
+        url: '{{ url('api/categories') }}',
+        data: function (params) {
+            var query = {
+              search: params.term,
+            }
+            return query;
+          },
+        processResults: function (data) {
+            return {
+                results: data.data,
+            };
+        },
+        cache: true
+      },
+  })
+}
 
 function showNote(data){
   $('#NoteDetailBody p').remove();
@@ -98,8 +129,30 @@ function showNote(data){
     console.log(e);
   })
 }
-</script>
-<script src="{{ url('Asset/lib/js/editor.js') }}"></script>
-@endpush
 
-@endsection
+function saveNote(){
+  for (let index = 0; index < 4; index++) {
+    if($(`#snow-editor-${index} .ql-editor`)[0].innerHTML == "<p><br><\/p>")
+    $(`#snow-editor-${index} .ql-editor`)[0].innerHTML = '';
+  }
+
+  $.post(`{{ url('api/note/add') }}`,{
+    "category": $('#selectCtgr').val(),
+    "summary": $('#snow-editor-0 .ql-editor')[0].innerHTML,
+    "details": $('#snow-editor-1 .ql-editor')[0].innerHTML,
+    "error_messages": $('#snow-editor-2 .ql-editor')[0].innerHTML,
+    "solution": $('#snow-editor-3 .ql-editor')[0].innerHTML,
+  })
+  .done((response) =>{
+    $('#addNoteDetail').modal('hide');
+    for (let index = 0; index < 4; index++) {
+      $(`#snow-editor-${index} .ql-editor`)[0].innerHTML = '<p><br><\/p>';
+    }
+
+    setTimeout(() => {
+      $('.datatables-ajax').DataTable().ajax.reload();
+    }, 1500);
+  })
+}
+</script>
+@endpush

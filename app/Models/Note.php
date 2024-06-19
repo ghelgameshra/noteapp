@@ -10,6 +10,7 @@ class Note extends Model
 {
     use HasFactory;
     protected $with = ['category'];
+    protected $guarded = ['category'];
 
     public function category(): BelongsTo
     {
