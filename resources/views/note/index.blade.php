@@ -3,7 +3,9 @@
 @section('css')
 <link rel="stylesheet" href="{{ url('Template') }}/assets/vendor/libs/select2/select2.css" />
 <link rel="stylesheet" href="{{ url('Asset/lib/css/quill.snow.css') }}">
+<link rel="stylesheet" href="{{ url('Asset/lib/css/quill.bubble.css') }}">
 <script src="{{ url('Asset/lib/js/quill.js') }}"></script>
+{{-- <script src="{{ url('Asset/lib/js/quill_bubble.js') }}"></script> --}}
 @endsection
 
 @section('title-page')
@@ -118,23 +120,23 @@ function addNewNote(){
     });
   }
 
-  console.log(JSON.stringify(detail.getContents()));
-
 
   $('#saveNoteButton').on('click', () =>{
 
     $.post(`{{ url('api/note/add') }}`,{
       "category": $('#selectCtgr').val(),
       "summary": $('#summary').val(),
-      "details": (detail.root.innerHTML == '<p><br></p>' ? '' : detail.getContents()),
-      "error_messages": (errorMessages.root.innerHTML == '<p><br></p>' ? '' : errorMessages.getContents()),
-      "solution": (solution.root.innerHTML == '<p><br></p>' ? '' : solution.getContents()),
+      "details": (detail.root.innerHTML == '<p><br></p>' ? '' : JSON.stringify(detail.getContents())),
+      "error_messages": (errorMessages.root.innerHTML == '<p><br></p>' ? '' : JSON.stringify(errorMessages.getContents())),
+      "solution": (solution.root.innerHTML == '<p><br></p>' ? '' : JSON.stringify(solution.getContents())),
     }).done((response) =>{
       $('#addNoteDetail').modal('hide');
 
       detail.root.innerHTML = '<p><br></p>';
       errorMessages.root.innerHTML = '<p><br></p>';
       solution.root.innerHTML = '<p><br></p>';
+      $('#summary').val('');
+      $('#selectCtgr').val('');
 
       setTimeout(() => {
         $('.datatables-ajax').DataTable().ajax.reload();
@@ -223,20 +225,23 @@ function showError(error){
 
 function showDetailNote(data){
   $('#NoteDetailSummary').children().remove();
-  $('#NoteDetailBody').children().remove();
-  $('#NoteDetailError').children().remove();
-  $('#NoteDetailSolution').children().remove();
+  $('#NoteDetailSummary').text(data['summary']);
 
   $('#noteDetailTitle').text(data['category_name']);
-  $('#NoteDetailSummary').append(data['summary']);
-  $('#NoteDetailBody').append(data['details']);
-  $('#NoteDetailSolution').append(data['solution']);
+
+  let details = new Quill('#NoteDetailBody', {theme: 'bubble', toolbar: false});
+  details.setContents(JSON.parse(data['details'])['ops']);
 
   if(data['error']){
-    $('#NoteDetailError').append(data['error']);
-  } else {
-    $('#NoteDetailError').parent().addClass('d-none');
+    $('#NoteDetailError').parent().removeClass('d-none');
+    let errorMessages = new Quill('#NoteDetailError', {theme: 'bubble', toolbar: false});
+    errorMessages.setContents(JSON.parse(data['error'])['ops']);
   }
+
+  let solution = new Quill('#NoteSulution', {theme: 'bubble', toolbar: false});
+  solution.setContents(JSON.parse(data['solution'])['ops']);
+
+
 }
 </script>
 @endpush

@@ -32,8 +32,19 @@ class NoteRequest extends FormRequest
         ];
     }
 
-    protected function failedValidation(Validator $validator)
+    public function messages()
     {
+        return [
+            "category.required" => 'category cannot be empty',
+            "category.integer" => 'category cannot be empty',
+            "summary.required" => 'summary cannot be empty',
+            "details.required" => 'details cannot be empty',
+            "error_messages.string" => 'error_messages cannot be empty',
+            "solution.required" => 'solution cannot be empty',
+        ];
+    }
+
+    public function failedValidation(Validator $validator){
         throw new HttpResponseException(response([
             "errors" => $validator->getMessageBag()
         ], 400));
