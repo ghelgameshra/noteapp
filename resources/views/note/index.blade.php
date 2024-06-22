@@ -41,7 +41,6 @@ Dictionary
 @endsection
 
 @push('js')
-<script src="{{ url('Asset/lib/js/editor.js') }}"></script>
 <script src="{{ url('Template') }}/assets/js/forms-selects.js"></script>
 <script src="{{ url('Template') }}/assets/vendor/libs/select2/select2.js"></script>
 <script>
@@ -83,6 +82,73 @@ $(function(){
 });
 // end funtion DOM
 
+function addNewNote(){
+  $('#addNoteDetail').modal('show');
+
+  const editorTheme = 'snow';
+  const editorModule = [
+    [{header: [1, 2, false]}],
+    ['bold', 'italic', 'underline'],
+    ['code-block']
+  ];
+
+  if( $('#editorDetails .ql-editor').length == 0 ){
+    detail = new Quill( '#editorDetails',{
+      modules: {
+        toolbar: editorModule
+      },
+      placeholder: 'Problem details...',
+      theme: editorTheme
+    });
+
+    errorMessages = new Quill( '#editorErrorMessages',{
+      modules: {
+        toolbar: editorModule
+      },
+      placeholder: 'Error messages...',
+      theme: editorTheme
+    });
+
+    solution = new Quill( '#editorSolution',{
+      modules: {
+        toolbar: editorModule
+      },
+      placeholder: 'Your solution here...',
+      theme: editorTheme
+    });
+  }
+
+  console.log(JSON.stringify(detail.getContents()));
+
+
+  $('#saveNoteButton').on('click', () =>{
+
+    $.post(`{{ url('api/note/add') }}`,{
+      "category": $('#selectCtgr').val(),
+      "summary": $('#summary').val(),
+      "details": (detail.root.innerHTML == '<p><br></p>' ? '' : detail.getContents()),
+      "error_messages": (errorMessages.root.innerHTML == '<p><br></p>' ? '' : errorMessages.getContents()),
+      "solution": (solution.root.innerHTML == '<p><br></p>' ? '' : solution.getContents()),
+    }).done((response) =>{
+      $('#addNoteDetail').modal('hide');
+
+      detail.root.innerHTML = '<p><br></p>';
+      errorMessages.root.innerHTML = '<p><br></p>';
+      solution.root.innerHTML = '<p><br></p>';
+
+      setTimeout(() => {
+        $('.datatables-ajax').DataTable().ajax.reload();
+      }, 1500);
+    }).fail((response) => {
+      const error = response.responseJSON['errors'];
+      showError(error);
+
+    })
+
+  });
+
+}
+
 function getCatg(){
   $('#selectCtgr').select2({
     dropdownParent: '#addNoteDetail',
@@ -105,54 +171,72 @@ function getCatg(){
 }
 
 function showNote(data){
-  $('#NoteDetailBody p').remove();
-  $('#NoteDetailError p').remove();
-  $('#NoteDetailSolution p').remove();
-
   $('#noteDetail').modal('show');
 
   $.get(`{{ url('api/notes/${data}') }}`)
   .done((response) => {
 
-    $('#noteDetailTitle').text(response.data['category_name']);
-    $('#NoteDetailSummary').append(response.data['summary']);
-
-    $('#NoteDetailBody').append(response.data['details']);
-
-    $('#NoteDetailError').append(response.data['error']);
-    $('#NoteDetailSolution').append(response.data['solution']);
-
-    $('#NoteDetailImage').attr('src', `{{ url('Images') }}/${response.data['image']}`);
-    $('#NoteDetailImage').attr('alt', `{{ url('Images') }}/${response.data['image']}`);
+    showDetailNote(response.data);
 
   }).fail((e) => {
     console.log(e);
   })
 }
 
-function saveNote(){
-  for (let index = 0; index < 4; index++) {
-    if($(`#snow-editor-${index} .ql-editor`)[0].innerHTML == "<p><br><\/p>")
-    $(`#snow-editor-${index} .ql-editor`)[0].innerHTML = '';
-  }
+function showError(error){
+  if(error['category']){
+      $('#categoryError').removeClass('d-none');
+      $('#categoryError p').text(error['category'])
+    } else {
+      $('#categoryError').addClass('d-none');
 
-  $.post(`{{ url('api/note/add') }}`,{
-    "category": $('#selectCtgr').val(),
-    "summary": $('#snow-editor-0 .ql-editor')[0].innerHTML,
-    "details": $('#snow-editor-1 .ql-editor')[0].innerHTML,
-    "error_messages": $('#snow-editor-2 .ql-editor')[0].innerHTML,
-    "solution": $('#snow-editor-3 .ql-editor')[0].innerHTML,
-  })
-  .done((response) =>{
-    $('#addNoteDetail').modal('hide');
-    for (let index = 0; index < 4; index++) {
-      $(`#snow-editor-${index} .ql-editor`)[0].innerHTML = '<p><br><\/p>';
     }
 
-    setTimeout(() => {
-      $('.datatables-ajax').DataTable().ajax.reload();
-    }, 1500);
-  })
+    if(error['summary']){
+      $('#summaryError').removeClass('d-none');
+      $('#summaryError p').text(error['summary'])
+    } else {
+      $('#summaryError').addClass('d-none');
+    }
+
+    if(error['details']){
+      $('#detailsError').removeClass('d-none');
+      $('#detailsError p').text(error['details'])
+    } else {
+      $('#detailsError').addClass('d-none')
+    }
+
+    if(error['error_messages']){
+      $('#error_messagesError').removeClass('d-none');
+      $('#error_messagesError p').text(error['error_messages'])
+    } else {
+      $('#error_messagesError').addClass('d-none');
+    }
+
+    if(error['solution']){
+      $('#solutionError').removeClass('d-none');
+      $('#solutionError p').text(error['solution'])
+    } else {
+      $('#solutionError').addClass('d-none');
+    }
+}
+
+function showDetailNote(data){
+  $('#NoteDetailSummary').children().remove();
+  $('#NoteDetailBody').children().remove();
+  $('#NoteDetailError').children().remove();
+  $('#NoteDetailSolution').children().remove();
+
+  $('#noteDetailTitle').text(data['category_name']);
+  $('#NoteDetailSummary').append(data['summary']);
+  $('#NoteDetailBody').append(data['details']);
+  $('#NoteDetailSolution').append(data['solution']);
+
+  if(data['error']){
+    $('#NoteDetailError').append(data['error']);
+  } else {
+    $('#NoteDetailError').parent().addClass('d-none');
+  }
 }
 </script>
 @endpush

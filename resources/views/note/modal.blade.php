@@ -9,29 +9,24 @@
       <div class="modal-body">
         <div class="row">
 
-          <div class="row">
-            <div class="col-md-8 mb-3">
-              <img src="" width="100%" id="NoteDetailImage" loading="lazy" alt="">
-            </div>
-            <div class="col-md-4 mb-3">
-              <label for="nameWithTitle" class="form-label">Summary</label>
-              <article class="form-control" id="NoteDetailSummary"></article>
-            </div>
+          <div class="col-12 mb-3">
+            <label for="nameWithTitle" class="form-label">Summary</label>
+            <div class="form-control" id="NoteDetailSummary"></div>
           </div>
 
           <div class="col-12 mb-3">
             <label for="nameWithTitle" class="form-label">Detail</label>
-            <article class="form-control" id="NoteDetailBody"></article>
+            <div class="form-control" id="NoteDetailBody"></div>
           </div>
 
           <div class="col-12 mb-3">
             <label for="nameWithTitle" class="form-label">Error</label>
-            <article class="form-control" id="NoteDetailError" width="100%"></article>
+            <div class="form-control" id="NoteDetailError" width="100%"></div>
           </div>
 
           <div class="col-12 mb-3">
             <label for="nameWithTitle" class="form-label">Solution</label>
-            <article class="form-control" id="NoteDetailSolution"></article>
+            <div class="form-control" id="NoteDetailSolution"></div>
           </div>
         </div>
       </div>
