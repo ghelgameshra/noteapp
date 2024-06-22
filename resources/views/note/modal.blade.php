@@ -9,25 +9,42 @@
       <div class="modal-body">
         <div class="row">
 
-          <div class="col-12 mb-3">
-            <label for="nameWithTitle" class="form-label">Summary</label>
-            <div class="form-control" id="NoteDetailSummary"></div>
+          <div class="col-12">
+            <div class="card mb-1">
+              <div class="card-body">
+                <label for="nameWithTitle" class="form-label">Summary</label>
+                <div class="form-control" id="NoteDetailSummary"></div>
+              </div>
+            </div>
           </div>
 
-          <div class="col-12 mb-3">
-            <label for="nameWithTitle" class="form-label">Detail</label>
-            <div class="form-control" id="NoteDetailBody"></div>
+          <div class="col-12">
+            <div class="card mb-1">
+              <div class="card-body">
+                <label for="nameWithTitle" class="form-label">Details Problem</label>
+                <div id="NoteDetailBody" class="form-control"></div>
+              </div>
+            </div>
           </div>
 
-          <div class="col-12 mb-3">
-            <label for="nameWithTitle" class="form-label">Error</label>
-            <div class="form-control" id="NoteDetailError" width="100%"></div>
+          <div class="col-12">
+            <div class="card mb-1">
+              <div class="card-body d-none">
+                <label for="nameWithTitle" class="form-label">Error Messages</label>
+                <div id="NoteDetailError" class="form-control"></div>
+              </div>
+            </div>
           </div>
 
-          <div class="col-12 mb-3">
-            <label for="nameWithTitle" class="form-label">Solution</label>
-            <div class="form-control" id="NoteDetailSolution"></div>
+          <div class="col-12">
+            <div class="card mb-1">
+              <div class="card-body">
+                <label for="nameWithTitle" class="form-label">Solution</label>
+                <div id="NoteSulution" class="form-control"></div>
+              </div>
+            </div>
           </div>
+
         </div>
       </div>
       <div class="modal-footer">
