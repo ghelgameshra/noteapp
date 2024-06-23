@@ -47,6 +47,7 @@ Dictionary
 <script src="{{ url('Template') }}/assets/vendor/libs/select2/select2.js"></script>
 <script>
 $(function(){
+addNewNote();
   var dt_ajax_table = $('.datatables-ajax'),
     dt_filter_table = $('.dt-column-search'),
     dt_adv_filter_table = $('.dt-advanced-search'),
@@ -103,6 +104,14 @@ function addNewNote(){
       theme: editorTheme
     });
 
+    errorImage = new Quill( '#editorErrorMessagesImage',{
+      modules: {
+        toolbar: editorModule
+      },
+      placeholder: 'Paste images here or upload a file...',
+      theme: editorTheme
+    });
+
     errorMessages = new Quill( '#editorErrorMessages',{
       modules: {
         toolbar: editorModule
@@ -123,12 +132,15 @@ function addNewNote(){
 
   $('#saveNoteButton').on('click', () =>{
 
+    console.log(errorImage.root.innerHTML);
+
     $.post(`{{ url('api/note/add') }}`,{
       "category": $('#selectCtgr').val(),
       "summary": $('#summary').val(),
       "details": (detail.root.innerHTML == '<p><br></p>' ? '' : JSON.stringify(detail.getContents())),
       "error_messages": (errorMessages.root.innerHTML == '<p><br></p>' ? '' : JSON.stringify(errorMessages.getContents())),
       "solution": (solution.root.innerHTML == '<p><br></p>' ? '' : JSON.stringify(solution.getContents())),
+      "error_image": (errorImage.root.innerHTML == '<p><br></p>' ? '' : errorImage.root.innerHTML),
     }).done((response) =>{
       $('#addNoteDetail').modal('hide');
 
