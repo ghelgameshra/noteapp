@@ -29,6 +29,7 @@ class NoteRequest extends FormRequest
             "details" => ['required', 'string'],
             "error_messages" => ['nullable', 'string'],
             "solution" => ['required', 'string'],
+            "error_image" => ['nullable', 'string']
         ];
     }
 

@@ -26,6 +26,19 @@
 
           <div class="col-12">
             <div class="card mb-1">
+              <h5 class="card-header">Error Images</h5>
+              <div class="card-body">
+                <small id="errorMessagesImage" class="text-danger d-flex align-item-center d-none">
+                    <i class="tf-icons ti ti-exclamation-circle"></i>
+                    <p>Error messages</p>
+                </small>
+                <div id="editorErrorMessagesImage"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card mb-1">
               <div class="card-body">
                 <small id="summaryError" class="text-danger d-flex align-item-center d-none">
                   <i class="tf-icons ti ti-exclamation-circle"></i>
@@ -39,6 +52,7 @@
           <!-- Snow Theme -->
           <div class="col-12">
             <div class="card mb-1">
+              <h5 class="card-header">Details Problem</h5>
               <div class="card-body">
                 <small id="detailsError" class="text-danger d-flex align-item-center d-none">
                     <i class="tf-icons ti ti-exclamation-circle"></i>
@@ -51,6 +65,7 @@
 
           <div class="col-12">
             <div class="card mb-1">
+              <h5 class="card-header">Error Messages</h5>
               <div class="card-body">
                 <small id="error_messagesError" class="text-danger d-flex align-item-center d-none">
                     <i class="tf-icons ti ti-exclamation-circle"></i>
@@ -63,6 +78,7 @@
 
           <div class="col-12">
             <div class="card mb-1">
+              <h5 class="card-header">Solution</h5>
               <div class="card-body">
                 <small id="solutionError" class="text-danger d-flex align-item-center d-none">
                     <i class="tf-icons ti ti-exclamation-circle"></i>
